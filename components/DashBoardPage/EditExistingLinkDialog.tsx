@@ -25,6 +25,7 @@ import { useUser } from '@clerk/nextjs';
 
 import { X, Loader2Icon, LucideEdit } from "lucide-react"
 import { LinkSchema } from '../../app/api/db/schema/links';
+import axios from "axios"
 
 
 export default function EditExistingLinkDialog({ newLink, setNewLink, oldLink}: { newLink: LinkSchema, setNewLink: React.Dispatch<React.SetStateAction<LinkSchema>>, oldLink: LinkSchema}) {	
@@ -82,20 +83,17 @@ export default function EditExistingLinkDialog({ newLink, setNewLink, oldLink}: 
 
 		}
 	}	
-	async function handleCancel() {
-			setFileStatus('');
-            setOpen(false);
-	}
 	async function handleSave(e: React.FormEvent<HTMLFormElement>) {
-        console.log(newLink);
+        // console.log(newLink);
 		setSaving(true);
 		e.preventDefault();
+        if(newLink !== oldLink) await axios.post("/api/db/modifyLink", { "link": newLink });
 		if(newLink.url !== oldLink.url) {
 			const encodedURL  = encodeURIComponent(newLink.url)
 			const res = await fetch(`/api/opengraph?url=${encodedURL}`)
 			const data = await res.json();
 			if (data.error) {
-				console.error(data.error);
+				// console.error(data.error);
 				return;
 			}
 			  
@@ -118,7 +116,7 @@ export default function EditExistingLinkDialog({ newLink, setNewLink, oldLink}: 
         <Button variant="default"> <LucideEdit/> </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[250px] md:max-w-[450px] lg:max-w-[550px]">
-		<DialogClose onClick={handleCancel}>
+		<DialogClose disabled={saving}>
 			<X className="h-4 w-4" />			
 		</DialogClose>
         <DialogHeader>

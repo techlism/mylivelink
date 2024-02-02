@@ -11,7 +11,7 @@ export async function GET(req : NextRequest) {
             [username]
         );
         if(result.rows.length > 0 ) return NextResponse.json({"success" : result.rows});
-        else return NextResponse.json({"failure" : "No Link Exist | No user exist" })
+        else return NextResponse.json({"failure" : "No links present. Please add some links" })
     } catch (error) {
         return NextResponse.json({"error":error})
     }

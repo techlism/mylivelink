@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ partial_insertion: res });
         else return NextResponse.json({ failure: "unable to add links" });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         return NextResponse.json({ error: error });
       }
     } else return NextResponse.json({ error: "Could not parse Links" });

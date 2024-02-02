@@ -2,8 +2,8 @@ import Link from "next/link"
 
 import FeatureSection from './FeatureSection';
 import HeroSection from './HeroSection';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import Navbar from '../Navbar';
+import Footer from '../Footer';
 
 export default function LandingPage() {
   return (

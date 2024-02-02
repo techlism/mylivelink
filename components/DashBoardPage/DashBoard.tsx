@@ -1,20 +1,20 @@
 import Container from "../LinkContainer";
 import NormalLinkCard from "../NormalLinkCard";
 import { CreateLinkDialog } from "./CreateLinkDialog";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import axios from "axios";
 
 import { LinkType, LinkSchema, LinkCategory } from "@/app/api/db/schema/links";
 import { User } from "@/app/api/db/schema/users";
-import { useUser } from "@clerk/nextjs";
-import Image from "next/image";
+import {  useUser } from "@clerk/nextjs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditUserDetailDialog from "./EditUserDetailDialog";
 import UserDetailCard from "./UserDetailCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExistingNormalLinkCard from "../ExistingNormalLinkCard";
+import UserCreateNote from '../UserCreateNote';
 export type LinksArray = LinkSchema[];
 
 export const backgrounds = [
@@ -32,9 +32,10 @@ export const backgrounds = [
 ];
 
 export default function DashBoard() {
-	// state variables
+  // state variables
   const [links, setLinks] = useState<LinksArray>([]);
   const [existingLinks, setExistingLinks] = useState<LinksArray>([]);
+  const [saving, setSaving] = useState(false);
   const { user } = useUser();
 
   const [newLink, setNewLink] = useState<LinkSchema>({
@@ -53,6 +54,7 @@ export default function DashBoard() {
     background: backgrounds[0].url,
     userProfileURL: user?.imageUrl || "",
   });
+
   // handler functions
   const addLink = (link: LinkSchema) => {
     if (!link.title || !link.url) return;
@@ -71,17 +73,57 @@ export default function DashBoard() {
   function handleDelete(url: string) {
     setLinks(links.filter((l) => l.url !== url));
   }
-  function handleExistingDelete(url: string) {
-    setExistingLinks(existingLinks.filter((l) => l.url !== url));
+
+  function handleExistingDelete(linkToDelete : LinkSchema) {
+	setExistingLinks((prevLinks) => prevLinks.filter(link => link !== linkToDelete));  
+	}
+
+  async function fetchLinks() {
+	if (user?.username) {
+	  try {
+		const response = await axios.get(
+		  `/api/db/getLinks?username=${user?.username}`
+		);
+		if (response.data.success) {
+		  setExistingLinks(response.data.success);
+		} else if (response.data.failure) {
+		  toast(`${response.data.failure}`, {
+			position: "bottom-right",
+			autoClose: 2000,
+			hideProgressBar: true,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: false,
+			progress: undefined,
+			theme: "dark",
+		  });
+		}
+	  } catch (error) {
+		toast(`Error : ${error}`, {
+		  position: "bottom-right",
+		  autoClose: 2000,
+		  hideProgressBar: true,
+		  closeOnClick: true,
+		  pauseOnHover: true,
+		  draggable: false,
+		  progress: undefined,
+		  theme: "dark",
+		});
+	  }
+	}
   }
+
   async function saveToDB() {
+	setSaving(true);
     try {
       const response = await axios.post("/api/db/addLinks", { links: links });
+	  setSaving(false);
       if (response.data.success) {
-        setExistingLinks(links.map((link) => ({ ...link, type: LinkType.Existing })));
+		setExistingLinks((prevExistingLinks) => [...prevExistingLinks, ...links.map((link) => ({ ...link, type: LinkType.Existing }))]);
+		setLinks([]);
         toast("Saved Successfully", {
           position: "bottom-right",
-          autoClose: 2000,
+          autoClose: 3000,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
@@ -121,10 +163,11 @@ export default function DashBoard() {
           theme: "dark",
         });
       }
+	  else setSaving(false);
     } catch (error) {
       toast(`Error : ${error}`, {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -132,9 +175,12 @@ export default function DashBoard() {
         progress: undefined,
         theme: "dark",
       });
+	  setSaving(false);
     }
   }
-  // useEffect 
+  const memoizedUserDetails = useMemo(() => userDetails, [userDetails]);
+  const memoizedExistingLinks = useMemo(() => existingLinks, [existingLinks,user]);
+
   useEffect(() => {
     async function getUserDetails() {
       const check = await axios.get(
@@ -146,98 +192,65 @@ export default function DashBoard() {
       }
     }
     getUserDetails();
-  }, []);
+  }, [memoizedUserDetails]);
 
   useEffect(() => {
-    async function fetchLinks() {
-		if(user?.username){
-			try {
-				const response = await axios.get(
-				  `/api/db/getLinks?username=${user?.username}`
-				);
-				if (response.data.success) {
-				  setExistingLinks(response.data.success);
-				} else if (response.data.failure) {
-				  toast(`Something went wrong : ${response.data.failure}`, {
-					position: "bottom-right",
-					autoClose: 2000,
-					hideProgressBar: true,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: false,
-					progress: undefined,
-					theme: "dark",
-				  });
-				}
-			  } catch (error) {
-				toast(`Error : ${error}`, {
-				  position: "bottom-right",
-				  autoClose: 2000,
-				  hideProgressBar: true,
-				  closeOnClick: true,
-				  pauseOnHover: true,
-				  draggable: false,
-				  progress: undefined,
-				  theme: "dark",
-				});
-			  }
-			}
-		}
+	fetchLinks();
+  }, [user, memoizedExistingLinks, links]);
 
-    fetchLinks();
-  },[existingLinks]);  
-  console.log(links);
-  return (
-    <div className="p-5 flex align-middle justify-center">
-      <Container>
-        <div>
-          <UserDetailCard userDetails={userDetails} />
-          <EditUserDetailDialog
-            userDetails={userDetails}
-            setUserDetails={setUserDetails}
-          />
-        </div>
-        <Tabs defaultValue="new">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="new">New Links</TabsTrigger>
-            <TabsTrigger value="existing">Existing Links</TabsTrigger>
-          </TabsList>
-          <TabsContent value="new">
-            <div className="flex flex-col gap-4">
-              <CreateLinkDialog
-                newLink={newLink}
-                setNewLink={setNewLink}
-                addLink={addLink}
-              />
-              {links.map(
-                (link, index) =>
-                  link.type === LinkType.New && (
-                    <NormalLinkCard
-                      link={link}
-                      key={index}
-                      onDelete={handleDelete}
-                      links={links}
-                    />
-                  )
-              )}
-              <Button variant={"default"} onClick={saveToDB}>
-                Save Changes
-              </Button>
-            </div>
-          </TabsContent>
-          <TabsContent value="existing">
-		  	{existingLinks.map(
-                (elink, index) =>                  
-                    <ExistingNormalLinkCard
-                      link={elink}
-                      key={index+"existing"}
-                      onDelete={handleExistingDelete}
-                      links={existingLinks}
-                    />
-			)}
-		  </TabsContent>
-        </Tabs>
-      </Container>
-    </div>
+//   console.log(links);
+  return (	
+      <div className="p-5 flex align-middle justify-center">
+        <Container>
+          <div>
+            <UserDetailCard userDetails={memoizedUserDetails} />			
+            <EditUserDetailDialog
+              userDetails={userDetails}
+              setUserDetails={setUserDetails}
+            />
+			<UserCreateNote/>
+          </div>
+          <Tabs defaultValue="new">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="new">New Links</TabsTrigger>
+              <TabsTrigger value="existing">Existing Links</TabsTrigger>
+            </TabsList>
+            <TabsContent value="new">
+              <div className="flex flex-col gap-4">
+                <CreateLinkDialog
+                  newLink={newLink}
+                  setNewLink={setNewLink}
+                  addLink={addLink}
+                />
+                {links.map(
+                  (link, index) =>
+                    link.type === LinkType.New && (
+                      <NormalLinkCard
+                        link={link}
+                        key={index}
+                        onDelete={handleDelete}
+                        links={links}
+                      />
+                    )
+                )}
+                <Button variant={"default"} onClick={saveToDB} disabled={saving}>
+                  Save Changes
+                </Button>
+              </div>
+            </TabsContent>
+            <TabsContent value="existing">
+				{[...new Set(memoizedExistingLinks)].map((elink, index) => (
+					<ExistingNormalLinkCard
+						link={elink}
+						key={index + "existing"}
+						onDelete={handleExistingDelete}
+						links={existingLinks}
+					/>
+				))}
+            </TabsContent>
+          </Tabs>
+        </Container>
+      </div>
+
   );
 }

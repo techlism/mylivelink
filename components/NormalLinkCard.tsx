@@ -9,7 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+
 import { ArrowUpRightSquare, CopyIcon, CopyCheck, LucideTrash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
@@ -19,8 +19,6 @@ import { useState, useEffect } from "react";
 
 import { EditLinkDialog } from './DashBoardPage/EditLinkDialog';
 import { deleteObject } from '@/app/actions';
-import { AspectRatio } from './ui/aspect-ratio';
-import Image from 'next/image';
 
 export default function NormalLinkCard({ link, onDelete, links}: { link: LinkSchema, links:LinksArray, onDelete: (url: string) => void}) {
     const [bgColor, setBgColor] = useState('');
@@ -44,12 +42,7 @@ export default function NormalLinkCard({ link, onDelete, links}: { link: LinkSch
             }
         };
         fetchColor();
-    });
-    useEffect(()=>{
-        if(newLink !== link){
-            links[links.indexOf(link)] = newLink;
-        }
-    },[newLink])
+    },[]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(link.url);
@@ -62,22 +55,21 @@ export default function NormalLinkCard({ link, onDelete, links}: { link: LinkSch
         onDelete(link.url);
     }
     return(
-
-            <Card className = {`flex mt-5 justify-between p-1 align-middle`} style={{backgroundColor:bgColor}}>
-                <div>
-                    <CardHeader>
-                        <CardTitle>{newLink.title}</CardTitle>                
-                    </CardHeader>
-                    <CardContent className="flex justify-center align-middle">
-                        {newLink.thumbnailUrl && newLink.thumbnailUrl !== '' ? 
-                            <img src={newLink.thumbnailUrl} alt={newLink.title} className="rounded-xl max-h-[20vw] max-w-[20vw]"/> :
-                            newLink.faviconURL && newLink.faviconURL !== '' &&
-                            <img src={newLink.faviconURL} alt={newLink.title}  className="rounded-xl max-h-[5vw] max-w-[5vw]"/>
-                        }
-                    </CardContent>
-                </div>
-                <div className='flex flex-col justify-center align-middle'>
-                <CardFooter className='grid grid-cols-2 gap-4 h-min py-20'>
+        <Card className = {`mt-4 justify-between p-2 align-middle grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-1 items-center w-fit`} style={{backgroundColor:bgColor}}>
+        <div>
+            <CardHeader>
+                <CardTitle>{newLink.title}</CardTitle>                
+            </CardHeader>
+            <CardContent className="flex justify-center align-middle">
+                {newLink.thumbnailUrl && newLink.thumbnailUrl !== '' ? 
+                    <img src={newLink.thumbnailUrl} alt={newLink.title} className="rounded-xl lg:max-h-[25vw] lg:max-w-[25vw] sm:max-h-[50vw] sm:max-w-[50vw] md:max-w-[25vw] md:max-h-[25vw]"/> :
+                    newLink.faviconURL && newLink.faviconURL !== '' &&
+                    <img src={newLink.faviconURL} alt={newLink.title}  className="rounded-xl max-h-[10vw] max-w-[10vw]"/>
+                }
+            </CardContent>
+        </div>
+        <div className='flex flex-col justify-center align-middle w-fit lg:pt-[10vh]'>
+        <CardFooter className='grid grid-cols-2 gap-4'>
                     <Button>
                         <Link href={link.url} target="blank">
                             <ArrowUpRightSquare/>

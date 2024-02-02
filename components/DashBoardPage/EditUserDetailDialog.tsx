@@ -34,9 +34,9 @@ export default function EditUserDetailDialog({
   const [background, setBackground] = useState(backgrounds[0]);
   const { user } = useUser();
   useEffect(()=>{
-	  setHeading(userDetails.heading);
 	  setBackground(backgrounds.find(bg => bg.url === userDetails.background)!);
-  },[])
+  },[userDetails])
+
   const handleUserDetailSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setUserDetails({
@@ -46,11 +46,11 @@ export default function EditUserDetailDialog({
       userProfileURL: user?.imageUrl!,
     });
     const check = await axios.get(`/api/db/checkUserExist?username=${user?.username}`);
-    console.log(check);
+    // console.log(check);
     if (!check.data.error) {
       if (check.data.false) {
         const createUser = await axios.post("/api/db/createUser", userDetails);
-        console.log(createUser);
+        // console.log(createUser);
       }
       if (check.data.true) {
         await axios.post("/api/db/modifyUser", { "user": userDetails });
@@ -94,7 +94,7 @@ export default function EditUserDetailDialog({
               className="overflow-scroll w-full p-2"
               id="heading"
               type="text"
-              defaultValue={heading.toString()}
+              defaultValue={userDetails.heading.toString()}
               onChange={(e) => setHeading(e.target.value)}
             />
           </div>
@@ -120,7 +120,7 @@ export default function EditUserDetailDialog({
               ))}
             </select>
           </div>
-		  <img
+		        <img
               src={background.url}
               alt={background.name}
               className="rounded-lg border my-4 mx-2"
