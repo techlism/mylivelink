@@ -18,7 +18,7 @@ export default function FeatureSection(){
                 <PieChartIcon className="h-6 w-6" />
                 <h3 className="text-lg font-bold">Analytics</h3>
                 <p className="text-muted-foreground">
-                  Track your page's performance with our built-in analytics.
+                  Track your page&apos;s performance with our built-in analytics.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 bg-[#ababab68] dark:bg-[#222222af] bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl p-4">
