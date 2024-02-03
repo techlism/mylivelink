@@ -25,9 +25,10 @@ import { useUser } from '@clerk/nextjs';
 
 import { X, Loader2Icon } from "lucide-react"
 import { LinkSchema } from "@/app/api/db/schema/links";
+import { User } from "@/app/api/db/schema/users"
 
 
-export function CreateLinkDialog({ newLink, setNewLink, addLink }: { newLink: LinkSchema, setNewLink: React.Dispatch<React.SetStateAction<LinkSchema>>, addLink: (link: LinkSchema) => void }) {	
+export function CreateLinkDialog({ newLink, setNewLink, addLink, userDetails }: { newLink: LinkSchema, setNewLink: React.Dispatch<React.SetStateAction<LinkSchema>>, addLink: (link: LinkSchema) => void, userDetails : User }) {	
 	
 	const[open, setOpen] = useState(false);
 	const[saving, setSaving] = useState(false);
@@ -133,7 +134,7 @@ export function CreateLinkDialog({ newLink, setNewLink, addLink }: { newLink: Li
 	return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add New Link</Button>
+        <Button variant="outline" disabled={userDetails.username === ""}>Add New Link</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[250px] md:max-w-[450px] lg:max-w-[550px]">
 		<DialogClose onClick={handleCancel}>

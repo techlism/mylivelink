@@ -1,6 +1,6 @@
 export interface User {
-    username: String
-    heading: String
-    background: String
+    username: string
+    heading: string
+    background: string
     userProfileURL : string
 }

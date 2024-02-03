@@ -1,18 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbExecute from "../dbExecute";
-import { LinkSchema } from "../schema/links";
 
-async function bodyParser(bodyData : ReadableStream<Uint8Array>){
-    const reader = bodyData.getReader();
-    let result = {};
-    return reader.read().then(function processText({ done, value }): any {
-      if (done) {
-        return result;
-      }
-      result = JSON.parse(value.toString());
-      return reader.read().then(processText);
-    })
-}
 
 export async function DELETE(req : NextRequest) {
     const link = Object.fromEntries(req.nextUrl.searchParams);

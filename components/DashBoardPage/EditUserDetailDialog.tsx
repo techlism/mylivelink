@@ -20,7 +20,7 @@ import axios from "axios";
 import { User } from "@/app/api/db/schema/users";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-toastify";
-import { X } from "lucide-react";
+import { Loader2Icon, X } from "lucide-react";
 
 export default function EditUserDetailDialog({
   setUserDetails,
@@ -30,54 +30,48 @@ export default function EditUserDetailDialog({
   userDetails: User;
 }) {
   const [open, setOpen] = useState(false);
-  const [heading, setHeading] = useState(userDetails.heading);
-  const [background, setBackground] = useState(backgrounds[0]);
   const { user } = useUser();
-  useEffect(()=>{
-	  setBackground(backgrounds.find(bg => bg.url === userDetails.background)!);
-  },[userDetails])
-
+  const [saving, setSaving] = useState(false);
   const handleUserDetailSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setUserDetails({
-      username: user?.username!,
-      heading: heading,
-      background: background.url,
-      userProfileURL: user?.imageUrl!,
-    });
-    const check = await axios.get(`/api/db/checkUserExist?username=${user?.username}`);
-    // console.log(check);
+    setSaving(true);
+    const check = await axios.get(
+      `/api/db/checkUserExist?username=${user?.username}`
+    );
     if (!check.data.error) {
       if (check.data.false) {
-        const createUser = await axios.post("/api/db/createUser", userDetails);
-        // console.log(createUser);
+        await axios.post("/api/db/createUser", userDetails);
       }
       if (check.data.true) {
-        await axios.post("/api/db/modifyUser", { "user": userDetails });
+        await axios.post("/api/db/modifyUser", { user: userDetails });
       }
-    } else{
-		toast(check.data.error, {
-			position: 'bottom-right',
-			autoClose: 2000,
-			hideProgressBar: true,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: false,
-			progress: undefined,
-			theme: 'dark'
-		  })
-	}
-	setOpen(false);
+    } else {
+      toast(check.data.error, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+      setSaving(false);
+    }
+    setSaving(false);
+    setOpen(false);
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="mx-4 mb-4">Edit Profile</Button>
+        <Button variant="outline" className="mx-4 mb-4">
+          Edit Profile
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[250px] md:max-w-[450px] lg:max-w-[550px]">
-	  <DialogClose>
-			<X className="h-4 w-4" />			
-		</DialogClose>
+        <DialogClose>
+          <X className="h-4 w-4" />
+        </DialogClose>
         <DialogHeader>
           <DialogTitle>Edit your Profile</DialogTitle>
           <DialogDescription>
@@ -85,7 +79,11 @@ export default function EditUserDetailDialog({
             profile badge in the navigation bar.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleUserDetailSubmit} className="flex flex-col gap-4" id="user-detail-form">
+        <form
+          onSubmit={handleUserDetailSubmit}
+          className="flex flex-col gap-4"
+          id="user-detail-form"
+        >
           <div className="grid grid-cols-3 items-center gap-4">
             <Label htmlFor="heading" className="text-right">
               Heading
@@ -94,8 +92,13 @@ export default function EditUserDetailDialog({
               className="overflow-scroll w-full p-2"
               id="heading"
               type="text"
-              defaultValue={userDetails.heading.toString()}
-              onChange={(e) => setHeading(e.target.value)}
+              defaultValue={userDetails.heading}
+              onChange={(e) =>
+                setUserDetails((prev: User) => ({
+                  ...prev,
+                  heading: e.target.value,
+                }))
+              }
             />
           </div>
           <div className="grid grid-cols-3 items-center gap-4">
@@ -103,36 +106,48 @@ export default function EditUserDetailDialog({
               Background
             </Label>
             <select
-              defaultValue={background.name}
-			  onChange={(e) => {
-				const selectedBackground = backgrounds.find(bg => bg.name === e.target.value);
-				if (selectedBackground) {
-				  setBackground(selectedBackground);
-				}
-			  }}
+              value={userDetails.background}
+              onChange={(e) => {
+                const selectedBackground = backgrounds.find(
+                  (bg) => bg.url === e.target.value
+                );
+                if (selectedBackground) {
+                  setUserDetails((prev: User) => ({
+                    ...prev,
+                    background: selectedBackground.url,
+                  }));
+                }
+              }}
               className="bg-background p-3 border rounded-lg font-medium text-sm"
-			  id="background"
+              id="background"
             >
               {backgrounds.map((bg) => (
-                <option key={bg.name} value={bg.name}>
+                <option key={bg.url} value={bg.url}>
                   {bg.name}
                 </option>
               ))}
             </select>
           </div>
-		        <img
-              src={background.url}
-              alt={background.name}
-              className="rounded-lg border my-4 mx-2"
-            />
+          <img
+            src={userDetails.background}
+            alt={userDetails.username + " background picture"}
+            className="rounded-lg border my-4 mx-2"
+          />
         </form>
-		<DialogFooter>
-		<Button type="submit" className="mr-4" form="user-detail-form">
-              Save Profile Details
-		</Button>
-		</DialogFooter>
+        <Button
+          type="submit"
+          className="mr-5"
+          form="user-detail-form"
+          disabled={saving}
+        >
+          {saving ? (
+            <Loader2Icon className="animate-spin" />
+          ) : (
+            "Save Profile Details"
+          )}
+        </Button>
+        <DialogFooter></DialogFooter>
       </DialogContent>
-	  
     </Dialog>
   );
 }

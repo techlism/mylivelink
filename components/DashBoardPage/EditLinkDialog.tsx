@@ -87,7 +87,7 @@ export function EditLinkDialog({ newLink, setNewLink, oldLink}: { newLink: LinkS
             setOpen(false);
 	}
 	async function handleSave(e: React.FormEvent<HTMLFormElement>) {
-        console.log(newLink);
+        // console.log(newLink);
 		setSaving(true);
 		e.preventDefault();
 		if(newLink.url !== oldLink.url) {

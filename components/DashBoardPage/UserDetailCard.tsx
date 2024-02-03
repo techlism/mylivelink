@@ -16,14 +16,15 @@ export default function UserDetailCard({userDetails}:{userDetails:User}){
         <CardHeader>
           <div className='grid lg:grid-cols-2 md:grid-cols-2 items-center sm:grid-cols-1 gap-3'>
               <CardDescription>
-              <Image
+              {userDetails.userProfileURL !== "" &&
+                <Image
                   unoptimized
                   src={userDetails?.userProfileURL}
                   alt={`${userDetails?.username} profile picture`}
                   height={50}
                   width={50}
                   className='rounded-xl'
-              />
+              />}
               </CardDescription>
               <CardTitle className='font-medium sm:text-base'>@{userDetails?.username}</CardTitle>
           </div>
