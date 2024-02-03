@@ -40,10 +40,10 @@ export default function EditUserDetailDialog({
     );
     if (!check.data.error) {
       if (check.data.false) {
-        await axios.post("/api/db/createUser", userDetails);
+        await axios.post("/api/db/createUser", {"user" : userDetails});
       }
       if (check.data.true) {
-        await axios.post("/api/db/modifyUser", { user: userDetails });
+        await axios.post("/api/db/modifyUser", { "user": userDetails });
       }
     } else {
       toast(check.data.error, {

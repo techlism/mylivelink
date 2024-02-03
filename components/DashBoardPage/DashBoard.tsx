@@ -123,7 +123,7 @@ export default function DashBoard() {
         setSaving(false);
         return;
       }
-      const response = await axios.post("/api/db/addLinks", { links: links });
+      const response = await axios.post("/api/db/addLinks", { "links": links });
       setSaving(false);
       if (response.data.success) {
         setExistingLinks((prevExistingLinks) => [
@@ -205,11 +205,11 @@ export default function DashBoard() {
       setUserDetails(details);
       return;
     } else if (check.data.false) {
-      const create = await axios.post("/api/db/createUser", {
+      const create = await axios.post("/api/db/createUser", {"user" : {
         ...userDetails,
         username: user?.username,
         userProfileURL: user?.imageUrl,
-      });
+      }});
       if (create.data.success) getUserDetails();
     }
   }

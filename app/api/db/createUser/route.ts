@@ -9,8 +9,7 @@ async function bodyParser(bodyData : ReadableStream<Uint8Array>){
       if (done) {
         return result;
       }
-      if(value.toString() !== undefined)
-        result = JSON.parse(value.toString());
+      if(value.toString() !== undefined) result = JSON.parse(value.toString());
 
       return reader.read().then(processText);
     })
@@ -18,10 +17,10 @@ async function bodyParser(bodyData : ReadableStream<Uint8Array>){
 
 export async function POST(req : NextRequest) {
     const data = req.body;
-    console.log(data);
+    // console.log(data);
     if(data){
-        const user : User = await bodyParser(data);
-        console.log(user);
+        const {user} : {user : User} = await bodyParser(data);
+        // console.log(user);
         if(user){
             try {
                 const res = await dbExecute(

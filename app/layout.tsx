@@ -9,6 +9,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://my-links.live'),
   title: "My Links Live",
   description: "Open source linktree alternative. Created by Techlism",
   openGraph:{
