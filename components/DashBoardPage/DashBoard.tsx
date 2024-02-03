@@ -237,7 +237,7 @@ export default function DashBoard() {
           if (check.data.true) {
             // If the user has just updated profile picture
             if (newDetails.username === currDetails.username) {
-              await axios.post("/api/db/modifyUser", { user: userDetails });
+              await axios.post("/api/db/modifyUser", { "user": userDetails });
               return;
             }
 
