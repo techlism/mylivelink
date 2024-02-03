@@ -88,18 +88,19 @@ export default function DashBoard() {
         );
         if (response.data.success) {
           setExistingLinks(response.data.success);
-        } else if (response.data.failure) {
-          toast(`${response.data.failure}`, {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false,
-            progress: undefined,
-            theme: "dark",
-          });
-        }
+        } 
+        // else if (response.data.failure) {
+        //   toast(`${response.data.failure}`, {
+        //     position: "bottom-right",
+        //     autoClose: 2000,
+        //     hideProgressBar: true,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: false,
+        //     progress: undefined,
+        //     theme: "dark",
+        //   });
+        // }
       } catch (error) {
         toast(`Error : ${error}`, {
           position: "bottom-right",
@@ -194,6 +195,7 @@ export default function DashBoard() {
 
   async function getUserDetails() {
     if (userDetails.username === user?.username) return;
+    if(user?.username === undefined) return;
     const check = await axios.get(
       `/api/db/checkUserExist?username=${user?.username}`
     );

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 async function bodyParser(bodyData : ReadableStream<Uint8Array>){
     const reader = bodyData.getReader();
-    let result : User;
+    let result = {};
     return reader.read().then(function processText({ done, value }): any {
       if (done) {
         return result;
