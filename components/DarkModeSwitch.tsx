@@ -26,7 +26,7 @@ const DarkModeSwitch = () =>{
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>    
-        <Button variant={'outline'} size="default" onClick={changeTheme} className="transition-colors duration-200 bg-transparent border-0">
+        <Button variant={'outline'} size="default" onClick={changeTheme} className="transition-colors duration-200 bg-transparent border-0 mr-1">
           { theme==='light' ? 
             <Moon size={15} />
             :

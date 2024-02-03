@@ -10,8 +10,10 @@ export default function Home(){
     const { isLoaded, isSignedIn, user } = useUser();
     if(!isLoaded){
         return(
+            <>
+            <Navbar/>
             <main className="min-h-screen">
-                <Navbar/>
+                
                 <div className="flex flex-col items-center justify-center">                
                 <div className="flex flex-col space-y-3">
                     <Skeleton className="h-[50vh] w-[35vw] rounded-xl" />
@@ -23,6 +25,7 @@ export default function Home(){
                 </div>  
                 <Footer/>
             </main>
+            </>
         )
     }
     else if(!isSignedIn){
