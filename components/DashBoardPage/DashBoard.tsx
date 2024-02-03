@@ -200,16 +200,15 @@ export default function DashBoard() {
       `/api/db/checkUserExist?username=${user?.username}`
     );
 
-    if (check.data.true) {
+    if (check.data.true && user?.username && user?.imageUrl) {
       const details: User = check.data.true;
       setUserDetails(details);
       return;
     } else if (check.data.false) {
-      const create = await axios.post("/api/db/createUser", {"user" : {
-        ...userDetails,
-        username: user?.username,
-        userProfileURL: user?.imageUrl,
-      }});
+      const toSend : User = JSON.parse(JSON.stringify(userDetails));
+      toSend.username = user?.username!;
+      toSend.userProfileURL = user?.imageUrl!;
+      const create = await axios.post("/api/db/createUser", {"user" : toSend});
       if (create.data.success) getUserDetails();
     }
   }
