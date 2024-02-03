@@ -15,6 +15,7 @@ import UserDetailCard from "./UserDetailCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExistingNormalLinkCard from "../ExistingNormalLinkCard";
 import UserCreateNote from "../UserCreateNote";
+import Link from "next/link";
 export type LinksArray = LinkSchema[];
 
 export const backgrounds = [
@@ -334,6 +335,9 @@ export default function DashBoard() {
             ))}
           </TabsContent>
         </Tabs>
+        <Button variant={'ghost'}>
+          <Link href={`/${user?.username}`}>Live Preview</Link>
+        </Button>
       </Container>
     </div>
   );
