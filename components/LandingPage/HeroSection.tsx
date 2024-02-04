@@ -21,7 +21,11 @@ export default function HeroSection(){
               <div className="flex gap-4 justify-center">            
                 {/* <Button variant={'outline'} className="p-3 rounded-lg bg-background text-base"> */}
                 <SignedOut>
-                  <SignInModal title="Get Started" ButtonType={ButtonType.SignUp}/>
+                  <Button>
+                      <Link href="https://accounts.my-links.live/sign-up">
+                        Get Started
+                      </Link>                    
+                    </Button>
                 </SignedOut>                
                 <SignedIn>
                   <Button>

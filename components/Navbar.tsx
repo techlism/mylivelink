@@ -31,7 +31,11 @@ export default function Navbar(){
               <UserButton/>
             </SignedIn>
             <SignedOut>
-              <SignInModal title="Sign In" ButtonType={ButtonType.SignIn}/>
+              <Button>
+                <Link href="https://accounts.my-links.live/sign-up">
+                  Get Started
+                </Link>                    
+            </Button>
             </SignedOut>
 
           <DarkModeSwitch/>
