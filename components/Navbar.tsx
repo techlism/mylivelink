@@ -32,8 +32,8 @@ export default function Navbar(){
             </SignedIn>
             <SignedOut>
               <Button>
-                <Link href="https://accounts.my-links.live/sign-up">
-                  Get Started
+                <Link href="https://accounts.my-links.live/sign-in">
+                  Sign In
                 </Link>                    
             </Button>
             </SignedOut>
