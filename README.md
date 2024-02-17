@@ -8,7 +8,7 @@ This project is aimed at creating a live link page for sharing on Social Media o
 
 1. Clone the repository: `git clone https://github.com/your-username/mylivelink.git`
 2. Install dependencies: `npm install`
-3. Start the server: `npm start`
+3. Start the server: `npm run dev`
 
 ## Usage
 
