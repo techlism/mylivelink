@@ -14,8 +14,7 @@ This project is aimed at creating a live link page for sharing on Social Media o
 
 1. Open the application in your web browser.
 2. Sign up for an account or log in if you already have one.
-3. Create a new document or open an existing one.
-4. Start collaborating with others in real-time.
+3. Create your page and live in few minutes.
 
 ## Contributing
 
