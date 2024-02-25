@@ -8,11 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { ArrowUpRightSquare, CopyIcon, CopyCheck } from "lucide-react";
+import { CopyIcon, CopyCheck } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
 import { useState, useEffect } from "react";
+import { Separator } from '@/components/ui/separator';
 
 export default function LiveNormalLinkCard({ link }: { link: LinkSchema }) {
   const [bgColor, setBgColor] = useState("");
@@ -44,9 +45,10 @@ export default function LiveNormalLinkCard({ link }: { link: LinkSchema }) {
   };
   console.log(bgColor, bgColor2);
   return (    
-    <Card className = {`mt-4 sm:w-full md:w-full lg:w-full xl:w-full grid grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 w-[95vw] hover:opacity-90`} style={{background:`linear-gradient(${bgColor}, ${bgColor2})`}} >
-            <Link href={link.url} target="blank">
-              <CardContent className='m-4 p-0 pt-0.5 h-[96px] w-[145px] grid grid-cols-1 items-center sticky top-0'>
+    // 
+    <Link href={link.url} target="blank">
+    <Card className = {`mt-4 grid grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 justify-end lg:gap-5  hover:opacity-95 `} style={{background:`linear-gradient(${bgColor}, ${bgColor2})`}} >
+              <CardContent className='m-4 p-0 pt-0.5 h-[96px] w-[145px] grid grid-cols-1 items-center'>
                   {link.thumbnailUrl && link.thumbnailUrl !== '' ? 
                       <img src={link.thumbnailUrl} alt={link.title} className="rounded-lg max-h-[95px] max-w-[143px]"/> :
                       link.faviconURL && link.faviconURL !== '' &&
@@ -56,12 +58,12 @@ export default function LiveNormalLinkCard({ link }: { link: LinkSchema }) {
               <CardHeader>
                   <CardTitle className='font-medium'>{link.title}</CardTitle>                
               </CardHeader>
-            </Link>            
-          <CardFooter className='p-3 m-0 mr-4 grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 items-center'>
+          <CardFooter className='p-3 m-0 mr-1 grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 items-center'>
             <Button onClick={handleCopy} className="hover:scale-105">
               {isCopied ? <CopyCheck /> : <CopyIcon />}
             </Button>
           </CardFooter>
     </Card>
+    </Link>
   );
 }

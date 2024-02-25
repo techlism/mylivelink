@@ -91,9 +91,9 @@ export default function Home({ params }: { params: { username: string } }) {
 
     if (userExists) {
         return (
-            <div className="flex justify-center align-middle min-h-screen p-4">
+            <div className="flex justify-center align-middle min-h-screen p-4 w-[98vw]">
                 <Container>
-                    <UserDetailCard userDetails={userDetails} />
+                    <UserDetailCard userDetails={userDetails}/>
                     {links.length > 0 && links.map((link) => (
                         <LiveNormalLinkCard key={link.url} link={link} />
                     ))}
