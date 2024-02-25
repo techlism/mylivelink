@@ -44,7 +44,7 @@ export default function LiveNormalLinkCard({ link }: { link: LinkSchema }) {
   };
   console.log(bgColor, bgColor2);
   return (    
-    <Card className = {`mt-4 w-full grid grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 hover:opacity-90`} style={{background:`linear-gradient(${bgColor}, ${bgColor2})`}} >
+    <Card className = {`mt-4 sm:w-full md:w-full lg:w-full xl:w-full grid grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 w-[95vw] hover:opacity-90`} style={{background:`linear-gradient(${bgColor}, ${bgColor2})`}} >
             <Link href={link.url} target="blank">
               <CardContent className='m-4 p-0 pt-0.5 h-[96px] w-[145px] grid grid-cols-1 items-center sticky top-0'>
                   {link.thumbnailUrl && link.thumbnailUrl !== '' ? 
