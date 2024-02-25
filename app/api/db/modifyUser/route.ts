@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
   if (user) {
     try {
       const res = await dbExecute(
-        `UPDATE users SET heading = ?, background = ? WHERE username = ?`,
-        [user.heading, user.background, user.username]
+        `UPDATE Users SET heading = ?, background = ?, userProfileURL = ? WHERE username = ?`,
+        [user.heading, user.background, user.userProfileURL, user.username]
       );
       if (res.rowsAffected > 0)
         return NextResponse.json({ success: "user details updated" });

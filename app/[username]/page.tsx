@@ -6,7 +6,8 @@ import axios from "axios";
 import Container from "@/components/LinkContainer";
 import { LinkSchema } from '../api/db/schema/links';
 import LiveNormalLinkCard from "@/components/LiveNormalLinkCard";
-import { Skeleton } from "@/components/ui/skeleton";
+// import { Skeleton } from "@/components/ui/skeleton";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 export default function Home({ params }: { params: { username: string } }) {
     const [userExists, setUserExists] = useState(false);
@@ -45,6 +46,26 @@ export default function Home({ params }: { params: { username: string } }) {
         }
         fetchUser();
     }, []);
+
+    useEffect(() => {
+        const createOgImageMeta = () => {
+            const title = encodeURIComponent(`@${userDetails.username}`);
+            const description = encodeURIComponent(`https://my-links.live/${userDetails.username}`);
+            const imageUrl = encodeURIComponent(userDetails.userProfileURL);
+            
+            //template settings
+            const templateId = 'e23b4a4f-83c2-4d9b-addb-051de54d819c';
+            const versionNumber = 1;
+            
+            const templateURL = `https://ogcdn.net/${templateId}/v${versionNumber}/${title}/${description}/${imageUrl}/og.png`;
+
+            const ogImageMeta = document.createElement("meta");
+            ogImageMeta.setAttribute("property", "og:image");
+            ogImageMeta.setAttribute("content", templateURL);
+            document.head.appendChild(ogImageMeta);
+        };
+        createOgImageMeta();
+    }, [userDetails]);    
 
     useEffect(() => {
         async function fetchLinks() {
@@ -87,11 +108,12 @@ export default function Home({ params }: { params: { username: string } }) {
                 ) : (
                     <div className="flex flex-col items-center justify-center">
                         <div className="flex flex-col space-y-3">
-                            <Skeleton className="h-[20vh] w-[35vw] rounded-xl" />
-                            <div className="space-y-2">
-                                <Skeleton className="h-5 w-[250px]" />
-                                <Skeleton className="h-5 w-[200px]" />
-                            </div>
+                        <Player
+                            autoplay
+                            loop
+                            src="https://lottie.host/d0b55f9b-ef82-435e-bae7-e1f66ce2b05e/jjuvcSm502.json"
+                            style={{ height: '70vw', width: '70vw' }}
+                        />
                         </div>
                     </div>
                 )}

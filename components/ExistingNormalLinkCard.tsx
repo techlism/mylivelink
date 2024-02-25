@@ -26,6 +26,7 @@ import { toast } from 'react-toastify';
 
 export default function ExistingNormalLinkCard({ link, onDelete, links}: { link: LinkSchema, links:LinksArray, onDelete: (link : LinkSchema) => void}) {
     const [bgColor, setBgColor] = useState('');
+    const [bgColor2, setBgColor2] = useState("");
     const [isCopied, setIsCopied] = useState(false);
     const [newLink, setNewLink] = useState<LinkSchema>({
         ...link,
@@ -37,6 +38,7 @@ export default function ExistingNormalLinkCard({ link, onDelete, links}: { link:
                 const res = await fetch(`/api/get-image-color?url=${encodedUrl}`);
                 const json = await res.json();
                 setBgColor(json?.color);
+                setBgColor2(json?.saturatedColor);
             }
             else if(newLink.faviconURL !== undefined && newLink.faviconURL !== '') {
                 const encodedUrl = encodeURIComponent(link.faviconURL);
@@ -51,6 +53,7 @@ export default function ExistingNormalLinkCard({ link, onDelete, links}: { link:
     const handleCopy = () => {
         navigator.clipboard.writeText(link.url);
         setIsCopied(true);
+        setTimeout(()=>setIsCopied(false), 2000);
     }
     async function handleDelete() {
         if(link.thumbnailUrl.startsWith('https://r2.my-links.live/')) {
@@ -65,7 +68,7 @@ export default function ExistingNormalLinkCard({ link, onDelete, links}: { link:
         if(response.data.success) {
             toast(`Deleted Successfully`, {
                 position: "bottom-right",
-                autoClose: 1000,
+                autoClose: 2000,
                 hideProgressBar: true,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -76,22 +79,20 @@ export default function ExistingNormalLinkCard({ link, onDelete, links}: { link:
         }        
     }
     return(
-
-            <Card className = {`mt-4 justify-between p-2 align-middle grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-1 items-center w-fit`} style={{backgroundColor:bgColor}}>
-                <div>
-                    <CardHeader>
-                        <CardTitle>{newLink.title}</CardTitle>                
-                    </CardHeader>
-                    <CardContent className="flex justify-center align-middle">
+        // grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-1 items-center
+            <Card className = {`mt-4 w-full grid grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3`} style={{background:`linear-gradient(${bgColor}, ${bgColor2})`}} >
+                    <CardContent className='m-4 p-0 pt-0.5 h-[96px] w-[145px] grid grid-cols-1 items-center'>
                         {newLink.thumbnailUrl && newLink.thumbnailUrl !== '' ? 
-                            <img src={newLink.thumbnailUrl} alt={newLink.title} className="rounded-xl lg:max-h-[25vw] lg:max-w-[25vw] sm:max-h-[50vw] sm:max-w-[50vw] md:max-w-[25vw] md:max-h-[25vw]"/> :
+                            <img src={newLink.thumbnailUrl} alt={newLink.title} className="rounded-lg max-h-[95px] max-w-[143px]"/> :
                             newLink.faviconURL && newLink.faviconURL !== '' &&
-                            <img src={newLink.faviconURL} alt={newLink.title}  className="rounded-xl max-h-[10vw] max-w-[10vw]"/>
+                            <img src={newLink.faviconURL} alt={newLink.title} className="rounded-lg max-h-[50px] max-w-[50px]"/>
                         }
                     </CardContent>
-                </div>
-                <div className='flex flex-col justify-center align-middle w-fit lg:pt-[10vh]'>
-                <CardFooter className='grid grid-cols-2 gap-4'>
+                    <CardHeader>
+                        <CardTitle className='font-medium'>{newLink.title}</CardTitle>                
+                    </CardHeader>
+                {/* <div className='flex flex-col justify-center align-middle w-fit lg:pt-[10vh]'> */}
+                <CardFooter className='p-3 m-0 mr-4 grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 items-center'>
                     <Button>
                         <Link href={link.url} target="blank">
                             <ArrowUpRightSquare/>
@@ -106,7 +107,7 @@ export default function ExistingNormalLinkCard({ link, onDelete, links}: { link:
                         <LucideTrash2/>
                     </Button>
                 </CardFooter>
-                </div>
+                {/* </div> */}
             </Card>
     )
 }

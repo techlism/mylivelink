@@ -5,10 +5,10 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "My Live Link",
-  description: "Open source linktree alternative. Created by Techlism",
-};
+// export const metadata: Metadata = {
+//   title: "My Live Link",
+//   description: "Open source linktree alternative. Created by Techlism",
+// };
 
 export default function RootLayout({
   children,

@@ -3,28 +3,27 @@ import DashBoard from "@/components/DashBoardPage/DashBoard";
 import { useUser } from "@clerk/nextjs";
 import Navbar from "@/components/Navbar";
 import { ToastContainer } from "react-toastify";
-import { Skeleton } from "@/components/ui/skeleton"
-
+// import { Skeleton } from "@/components/ui/skeleton"
+import { Player } from "@lottiefiles/react-lottie-player";
 import Footer from '../../components/Footer';
 export default function Home(){
     const { isLoaded, isSignedIn, user } = useUser();
+
     if(!isLoaded){
         return(
             <>
             <Navbar/>
-            <main className="min-h-screen">
-                
+            <main className="min-h-screen">                
                 <div className="flex flex-col items-center justify-center">                
-                <div className="flex flex-col space-y-3">
-                    <Skeleton className="h-[50vh] w-[35vw] rounded-xl" />
-                    <div className="space-y-2">
-                        <Skeleton className="h-5 w-[250px]" />
-                        <Skeleton className="h-5 w-[200px]" />
-                    </div>
-                    </div>
-                </div>  
-                <Footer/>
+                <Player
+                    autoplay
+                    loop
+                    src="https://lottie.host/d0b55f9b-ef82-435e-bae7-e1f66ce2b05e/jjuvcSm502.json"
+                    style={{ height: '70vw', width: '70vw' }}
+                />
+                </div>                 
             </main>
+            <Footer/>
             </>
         )
     }

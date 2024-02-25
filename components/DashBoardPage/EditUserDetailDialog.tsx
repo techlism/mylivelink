@@ -11,16 +11,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-
-import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
+import { Textarea } from "@/components/ui/textarea"
+import { useState } from "react";
+// import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { backgrounds } from "./DashBoard";
 import axios from "axios";
 import { User } from "@/app/api/db/schema/users";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-toastify";
-import { Loader2Icon, X } from "lucide-react";
+import { Loader2Icon, X, Settings2 } from "lucide-react";
+
 
 export default function EditUserDetailDialog({
   setUserDetails,
@@ -64,31 +65,43 @@ export default function EditUserDetailDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="mx-4 mb-4">
+        <Button variant="outline" className="mb-4 gap-2">          
+          <Settings2/>
           Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[250px] md:max-w-[450px] lg:max-w-[550px]">
+      <DialogContent className="sm:max-w-[250px] md:max-w-[450px] lg:max-w-[550px] xl:max-w-[650px]">
         <DialogClose>
           <X className="h-4 w-4" />
         </DialogClose>
         <DialogHeader>
           <DialogTitle>Edit your Profile</DialogTitle>
           <DialogDescription>
-            To update your username or profile picture, please click on the
+          -&gt;To update your username or profile picture, please click on the
             profile badge in the navigation bar.
           </DialogDescription>
         </DialogHeader>
         <form
           onSubmit={handleUserDetailSubmit}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-3"
           id="user-detail-form"
         >
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="heading" className="text-right">
+          <div className="grid  items-center gap-3">
+            <Label htmlFor="heading" className="text-left ml-1">
               Heading
             </Label>
-            <Input
+            <Textarea
+                className=" w-full p-2"
+                id="heading"
+                defaultValue={userDetails.heading}
+                onChange={(e) =>
+                  setUserDetails((prev: User) => ({
+                    ...prev,
+                    heading: e.target.value,
+                  }))
+                }
+            />
+            {/* <Input
               className="overflow-scroll w-full p-2"
               id="heading"
               type="text"
@@ -99,10 +112,10 @@ export default function EditUserDetailDialog({
                   heading: e.target.value,
                 }))
               }
-            />
+            /> */}
           </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="background" className="text-right">
+          <div className="grid items-center gap-3">
+            <Label htmlFor="background" className="text-left ml-1">
               Background
             </Label>
             <select
@@ -130,8 +143,9 @@ export default function EditUserDetailDialog({
           </div>
           <img
             src={userDetails.background}
-            alt={userDetails.username + " background picture"}
-            className="rounded-lg border my-4 mx-2"
+            alt={userDetails.username + " background image"}
+            id={userDetails.background}
+            className="rounded-lg border my-4 mx-2 max-w-[150px] sm:max-h-[150px]"
           />
         </form>
         <Button

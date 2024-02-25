@@ -4,7 +4,6 @@ import { CreateLinkDialog } from "./CreateLinkDialog";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import axios from "axios";
-
 import { LinkType, LinkSchema, LinkCategory } from "@/app/api/db/schema/links";
 import { User } from "@/app/api/db/schema/users";
 import { useUser } from "@clerk/nextjs";
@@ -16,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExistingNormalLinkCard from "../ExistingNormalLinkCard";
 import UserCreateNote from "../UserCreateNote";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 export type LinksArray = LinkSchema[];
 
 export const backgrounds = [
@@ -90,18 +90,6 @@ export default function DashBoard() {
         if (response.data.success) {
           setExistingLinks(response.data.success);
         } 
-        // else if (response.data.failure) {
-        //   toast(`${response.data.failure}`, {
-        //     position: "bottom-right",
-        //     autoClose: 2000,
-        //     hideProgressBar: true,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: false,
-        //     progress: undefined,
-        //     theme: "dark",
-        //   });
-        // }
       } catch (error) {
         toast(`Error : ${error}`, {
           position: "bottom-right",
@@ -238,7 +226,11 @@ export default function DashBoard() {
           if (check.data.true) {
             // If the user has just updated profile picture
             if (newDetails.username === currDetails.username) {
-              await axios.post("/api/db/modifyUser", { "user": userDetails });
+              // console.log(newDetails)
+              const modify = await axios.post("/api/db/modifyUser", { "user": newDetails });
+              if(modify.data.success) {
+                setUserDetails(newDetails);
+              }
               return;
             }
 
@@ -273,7 +265,7 @@ export default function DashBoard() {
       }
     }
     getUserDetails().then(updateUserDynamically);
-  }, [user?.username, user?.imageUrl]);
+  }, [user?.username, user?.imageUrl, user]);
 
   useEffect(() => {
     fetchLinks();
@@ -335,8 +327,8 @@ export default function DashBoard() {
             ))}
           </TabsContent>
         </Tabs>
-        <Button variant={'ghost'}>
-          <Link href={`/${user?.username}`}>Live Preview</Link>
+        <Button variant={'outline'} className="bg-transparent my-4 max-w-fit">
+          <a href={`/${user?.username}`} target="_blank" className="flex gap-3 align-middle text-base"><ExternalLink/> Live Preview</a>          
         </Button>
       </Container>
     </div>

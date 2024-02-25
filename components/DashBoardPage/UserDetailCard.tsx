@@ -8,11 +8,11 @@ import {
 import Image from 'next/image'
 import { Separator } from '@/components/ui/separator'
 import { User } from '@/app/api/db/schema/users'
-import { useUser } from '@clerk/nextjs';
+// import { useUser } from '@clerk/nextjs';
 
 export default function UserDetailCard({userDetails}:{userDetails:User}){
     return(
-        <Card className='m-4 p-5 sm:max-w-[80vw] md:max-w-[45vw] lg:max-w-[30vw]'>
+        <Card className='mb-4 p-4'>
         <CardHeader>
           <div className='grid lg:grid-cols-2 md:grid-cols-2 items-center sm:grid-cols-1 gap-3'>
               <CardDescription>
@@ -21,9 +21,9 @@ export default function UserDetailCard({userDetails}:{userDetails:User}){
                   unoptimized
                   src={userDetails?.userProfileURL}
                   alt={`${userDetails?.username} profile picture`}
-                  height={50}
-                  width={50}
-                  className='rounded-xl'
+                  height={100}
+                  width={100}
+                  className='rounded-lg'
               />}
               </CardDescription>
               <CardTitle className='font-medium sm:text-base'>@{userDetails?.username}</CardTitle>
