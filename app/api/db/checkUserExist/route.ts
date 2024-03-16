@@ -13,7 +13,7 @@ export async function GET(req : NextRequest) {
                 [username]
             );
             if(result.rows.length > 0 ) return NextResponse.json({"true" : result.rows[0]});
-            else return NextResponse.json({"false" : "User does not exist" })              
+            else return NextResponse.json({"false" : "User/Page you are looking for does not exist" })              
         } catch (error) {
             return NextResponse.json({"error":error})
         }          
