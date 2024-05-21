@@ -23,7 +23,7 @@ export default function LiveNormalLinkCard({ link, bgColor1, bgColor2 }: { link:
       <div
         className={`mt-3 rounded-sm rounded-l-0 ${
           bgColor1 === 'primary' ? 'bg-gradient-to-b from-slate-600 to-zinc-900' : ''
-        } flex flex-row justify-stretch h-20 items-center align-middle transform transition-transform duration-200 ease-in-out hover:scale-105`}
+        } flex flex-row justify-stretch h-[90px] items-center align-middle transform transition-transform duration-200 ease-in-out hover:scale-105`}
         style={{
           background: bgColor1 !== 'primary' ? `linear-gradient(to bottom, ${bgColor2}, ${bgColor1})` : '',
         }}

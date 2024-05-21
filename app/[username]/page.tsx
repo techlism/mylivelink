@@ -213,7 +213,7 @@ export default async function Page({ params }: PageProps) {
   const color = await getColors(links);
   return (
     <main className="flex justify-center align-middle items-center min-h-screen p-4 max-w-7xl mx-auto">
-      <Container className="bg-gray-700 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-70">
+      <Container className="bg-gray-400 dark:bg-gray-800 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-70 max-w-max mx-auto">
         <UserDetailCard userDetails={userDetails} />
         <div>
             {links.length > 0 &&
