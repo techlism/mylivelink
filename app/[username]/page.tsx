@@ -131,7 +131,6 @@ import { LinkSchema } from '../api/db/schema/links';
 import LiveNormalLinkCard from '@/components/LiveNormalLinkCard';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
-import { link } from "fs";
 
 interface PageProps {
   params: { username: string };
@@ -152,7 +151,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 async function fetchUserDetails(username: string): Promise<User | null> {
     try {
-        const response = await axios.get(`http://localhost:3000/api/db/checkUserExist?username=${username}`);
+        const response = await axios.get(`${process.env.BASE_URL}/api/db/checkUserExist?username=${username}`);
         if(response?.data?.true){
             return response.data.true as  User ;
         }
@@ -166,7 +165,7 @@ async function fetchUserDetails(username: string): Promise<User | null> {
 
 async function fetchUserLinks(username: string): Promise<LinkSchema[]> {
   try {
-    const response = await axios.get(`http://localhost:3000/api/db/getLinks?username=${username}`);
+    const response = await axios.get(`${process.env.BASE_URL}/api/db/getLinks?username=${username}`);
     if(response?.data?.success){
         return response.data.success as LinkSchema[] ;
     }
@@ -187,7 +186,7 @@ async function getColors(links: LinkSchema[]): Promise<ImageColorResponse[]> {
         let response;
         if (link.thumbnailUrl !== "") {
           const thumbnailUrl = encodeURIComponent(link.thumbnailUrl);
-          response = await axios.get(`http://localhost:3000/api/get-image-color?url=${thumbnailUrl}`);
+          response = await axios.get(`${process.env.BASE_URL}/api/get-image-color?url=${thumbnailUrl}`);
         }
         if (response?.data?.color && response?.data?.saturatedColor) {
           const imageColor: ImageColorResponse = response.data;
@@ -213,14 +212,16 @@ export default async function Page({ params }: PageProps) {
   const links = await fetchUserLinks(params.username);
   const color = await getColors(links);
   return (
-    <div className="flex justify-center align-middle min-h-screen p-4 w-[98vw]">
-      <Container>
+    <main className="flex justify-center align-middle items-center min-h-screen p-4 max-w-7xl mx-auto">
+      <Container className="bg-gray-700 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-70">
         <UserDetailCard userDetails={userDetails} />
-        {links.length > 0 &&
-          links.map((link,index) => (
-            <LiveNormalLinkCard key={link.url} link={link} bgColor1={color[index]?.color} bgColor2={color[index]?.saturatedColor}/>
-          ))}
+        <div>
+            {links.length > 0 &&
+            links.map((link,index) => (
+                <LiveNormalLinkCard key={link.url} link={link} bgColor1={color[index]?.color} bgColor2={color[index]?.saturatedColor}/>
+            ))}
+        </div>
       </Container>
-    </div>
+    </main>
   );
 }
