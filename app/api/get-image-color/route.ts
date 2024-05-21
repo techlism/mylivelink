@@ -33,10 +33,10 @@ export async function GET(req : NextRequest) {
         const minSaturatedColor = colors.reduce((min, color) => 
             color.saturation < min.saturation ? color : min, colors[0]
         );        
-        const colorWithAlpha = `${minSaturatedColor.hex}30`;
-        const colorWithAlpha2 = `${maxSaturatedColor.hex}60`;
+        const colorWithAlpha = `${minSaturatedColor.hex}35`;
+        const colorWithAlpha2 = `${maxSaturatedColor.hex}65`;
         return NextResponse.json({"color" : colorWithAlpha,"saturatedColor": colorWithAlpha2});
     } catch (error) {
-        return NextResponse.json({"error" : error});
+        return NextResponse.json({"error" : "Unable to get colors"});
     }
 }    

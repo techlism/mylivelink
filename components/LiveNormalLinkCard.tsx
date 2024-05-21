@@ -1,4 +1,4 @@
-"use client";
+
 import { LinkSchema } from "@/app/api/db/schema/links";
 import {
   Card,
@@ -12,58 +12,41 @@ import { CopyIcon, CopyCheck } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
-import { useState, useEffect } from "react";
-import { Separator } from '@/components/ui/separator';
+import ShareDropdownMenu from "./ShareDropdown";
 
-export default function LiveNormalLinkCard({ link }: { link: LinkSchema }) {
-  const [bgColor, setBgColor] = useState("");
-  const [bgColor2, setBgColor2] = useState("");
-  const [isCopied, setIsCopied] = useState(false);
-  useEffect(() => {
-    const fetchColor = async () => {
-      if (link.thumbnailUrl !== "") {
-        const encodedUrl = encodeURIComponent(link.thumbnailUrl);
-        const res = await fetch(`/api/get-image-color?url=${encodedUrl}`);
-        const json = await res.json();
-        setBgColor(json.color);
-        setBgColor2(json?.saturatedColor);
-      } else if (link.faviconURL !== undefined && link.faviconURL !== "") {
-        const encodedUrl = encodeURIComponent(link.faviconURL);
-        const res = await fetch(`/api/get-image-color?url=${encodedUrl}`);
-        const json = await res.json();
-        setBgColor(json?.color);
-        setBgColor2(json?.saturatedColor);
-      }
-    };
-    fetchColor();
-  }, []);
+export default function LiveNormalLinkCard({ link, bgColor1, bgColor2 }: { link: LinkSchema, bgColor1 : string, bgColor2 : string }) {
+  return (
+    <Link 
+      href={link.url}
+      target="_blank"
+    >
+      <div
+        className={`mt-3 rounded-sm rounded-l-0 ${
+          bgColor1 === 'primary' ? 'bg-gradient-to-b from-slate-600 to-zinc-900' : ''
+        } flex flex-row justify-stretch h-20 items-center align-middle transform transition-transform duration-200 ease-in-out hover:scale-105`}
+        style={{
+          background: bgColor1 !== 'primary' ? `linear-gradient(to bottom, ${bgColor2}, ${bgColor1})` : '',
+        }}
+      >
+        <div
+          className={`w-[36%] h-full flex ${
+            link.thumbnailUrl !== '' ? 'justify-center' : 'justify-start'
+          } items-center overflow-hidden rounded-l-sm`}
+        >
+          {link.thumbnailUrl !== '' ? (
+            <img src={link.thumbnailUrl} alt={link.title} className="object-cover h-full w-full" />
+          ) : (
+          <img src={link.faviconURL} alt={link.title} 
+            className="object-cover h-full max-w-full"
+            style={{ clipPath: 'inset(4% 4% 4% 4%)' }} />
+          )}
+        </div>
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(link.url);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
-  console.log(bgColor, bgColor2);
-  return (    
-    // 
-    <Link href={link.url} target="blank">
-    <Card className = {`mt-4 grid grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 justify-end lg:gap-5  hover:opacity-95 `} style={{background:`linear-gradient(${bgColor}, ${bgColor2})`}} >
-              <CardContent className='m-4 p-0 pt-0.5 h-[96px] w-[145px] grid grid-cols-1 items-center'>
-                  {link.thumbnailUrl && link.thumbnailUrl !== '' ? 
-                      <img src={link.thumbnailUrl} alt={link.title} className="rounded-lg max-h-[95px] max-w-[143px]"/> :
-                      link.faviconURL && link.faviconURL !== '' &&
-                      <img src={link.faviconURL} alt={link.title} className="rounded-lg max-h-[50px] max-w-[50px]"/>
-                  }
-              </CardContent>
-              <CardHeader>
-                  <CardTitle className='font-medium'>{link.title}</CardTitle>                
-              </CardHeader>
-          <CardFooter className='p-3 m-0 mr-1 grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 items-center'>
-            <Button onClick={handleCopy} className="hover:scale-105">
-              {isCopied ? <CopyCheck /> : <CopyIcon />}
-            </Button>
-          </CardFooter>
-    </Card>
-    </Link>
+        <div className="flex-1 px-4">
+          <h2 className="font-medium text-lg">{link.title}</h2>
+        </div>
+        <ShareDropdownMenu link={link.url}/>
+    </div>
+    </Link>       
   );
 }
