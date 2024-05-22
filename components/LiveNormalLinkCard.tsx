@@ -23,7 +23,7 @@ export default function LiveNormalLinkCard({ link, bgColor1, bgColor2 }: { link:
       <div
         className={`mt-3 rounded-sm rounded-l-0 ${
           bgColor1 === 'primary' ? 'bg-gradient-to-b from-slate-600 to-zinc-900' : ''
-        } flex flex-row justify-stretch h-[110px] md:h-[95px] lg:h-[90px] xl:h-[90px] 2xl:h-[90px] items-center align-middle transform transition-transform duration-200 ease-in-out hover:scale-105`}
+        } flex flex-row justify-stretch h-[110px] md:h-[95px] lg:h-[90px] xl:h-[90px] 2xl:h-[90px] items-center align-middle transform transition-transform ease-in-out hover:scale-[103%] hover:border`}
         style={{
           background: bgColor1 !== 'primary' ? `linear-gradient(to bottom, ${bgColor2}, ${bgColor1})` : '',
         }}
@@ -38,7 +38,7 @@ export default function LiveNormalLinkCard({ link, bgColor1, bgColor2 }: { link:
           ) : (
           <img src={link.faviconURL} alt={link.title} 
             className="object-cover h-full max-w-full"
-            style={{ clipPath: 'inset(4% 4% 4% 4%)' }} />
+            style={{ clipPath: 'inset(5% 5% 5% 5%)' }} />
           )}
         </div>
 
