@@ -3,7 +3,7 @@ import { Gabarito } from "next/font/google";
 
 import { ThemeProvider } from '@/components/theme-provider';
 
-const inter = Gabarito({ subsets: ["latin"] });
+const gabarito = Gabarito({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
 //   title: "My Live Link",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-        <body className={inter.className}>
+        <body className={gabarito.className}>
           <ThemeProvider
               attribute="class"
               defaultTheme="light"

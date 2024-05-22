@@ -23,7 +23,7 @@ export default function LiveNormalLinkCard({ link, bgColor1, bgColor2 }: { link:
       <div
         className={`mt-3 rounded-sm rounded-l-0 ${
           bgColor1 === 'primary' ? 'bg-gradient-to-b from-slate-600 to-zinc-900' : ''
-        } flex flex-row justify-stretch h-[90px] items-center align-middle transform transition-transform duration-200 ease-in-out hover:scale-105`}
+        } flex flex-row justify-stretch h-[110px] md:h-[95px] lg:h-[90px] xl:h-[90px] 2xl:h-[90px] items-center align-middle transform transition-transform duration-200 ease-in-out hover:scale-105`}
         style={{
           background: bgColor1 !== 'primary' ? `linear-gradient(to bottom, ${bgColor2}, ${bgColor1})` : '',
         }}
@@ -43,7 +43,7 @@ export default function LiveNormalLinkCard({ link, bgColor1, bgColor2 }: { link:
         </div>
 
         <div className="flex-1 px-4">
-          <h2 className="font-medium text-lg">{link.title}</h2>
+          <h2 className="font-medium text-sm md:text-base lg:text-lg xl:text-lg 2xl:text-lg">{link.title}</h2>
         </div>
         <ShareDropdownMenu link={link.url}/>
     </div>
